@@ -1,0 +1,35 @@
+class TicTacToe(Game):
+    def __init__(self):
+        initial_state = [[' ' for _ in range(3)] for _ in range(3)]
+        super().__init__(initial_state)
+    
+    def actions(self, state):
+        actions = []
+        for i in range(3):
+            for j in range(3):
+                if state[i][j] == ' ':
+                    actions.append((i, j))
+        return actions
+    
+    def result(self, state, action):
+        i, j = action
+        new_state = [row[:] for row in state]
+        new_state[i][j] = 'X'  # Assuming 'X' is the current player's move
+        return new_state
+    
+    def is_terminal(self, state):
+        return self.utility(state) is not None
+    
+    def utility(self, state):
+        lines = [state[i] for i in range(3)]  # rows
+        lines.extend([state[i][j] for i in range(3)] for j in range(3))  # columns
+        lines.extend([state[i][i] for i in range(3)])  # main diagonal
+        lines.extend([state[i][2-i] for i in range(3)])  # anti-diagonal
+        
+        if any(line == ['X', 'X', 'X'] for line in lines):
+            return 1
+        if any(line == ['O', 'O', 'O'] for line in lines):
+            return -1
+        if all(state[i][j] != ' ' for i in range(3) for j in range(3)):
+            return 0
+        return None
